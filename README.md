@@ -5,8 +5,8 @@
 - This converts dependency tree under the UD (http://universaldependencies.org) scheme back-and-forth between content and function head styles
 - You can get better parsing accuracy by following steps
   - Convert UD to function head style
-  - Train your parser with it
-  - Reconvert the parser's predictions 
+  - Train your parser with the converted data
+  - Reconvert the parser's predictions into UD scheme
 - Please check [1] in detail.
 
 # HOW TO USE
