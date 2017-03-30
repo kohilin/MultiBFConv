@@ -18,4 +18,4 @@
 - Please remove UD's extra lines like sentence id beforehand
 
 # REFERENCE
-[1] Ryosuke, Kohita., Hiroshi, Noji. & Yuji, Matsumoto. 2017. Multilingual Back-and-Forth Conversion between Content and Function Head for Easy Dependency Parsing. EACL. (accepted).  
+[1] Ryosuke, Kohita., Hiroshi, Noji. & Yuji, Matsumoto. 2017. Multilingual Back-and-Forth Conversion between Content and Function Head for Easy Dependency Parsing. EACL.  
