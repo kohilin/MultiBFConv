@@ -21,9 +21,6 @@ class Conllu:
         self.mLeftChild = []
         self.mRightChild = []
 
-
-
-
     def print_all(self, delimiter="\t"):
         print((self.mId + delimiter + self.mForm + delimiter + self.mLemma + delimiter + self.mUpostag + delimiter + self.mXpostag + delimiter + self.mFeats + delimiter + self.mHead + delimiter + self.mDeprel + delimiter + self.mDeps + delimiter + self.mMisc).strip())
 
@@ -46,6 +43,12 @@ class Sentence:
                     self.sent_[head].mLeftChild.append(i)
                 else:
                     self.sent_[head].mRightChild.append(i)
+
+    def apply_convert_tree(self):
+        for word in self.lines_:
+            if "-" in word[0]:
+                continue
+            word[6] = self.sent_[int(word[0])-1].mHead
 
 def check_proj(sentence):
     for i, c in enumerate(sentence):
@@ -90,12 +93,10 @@ def conllu_reader(conllufile):
                     sentence.header_ += line
 
             else:
-                # [id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc] = line.split('\t')
                 line_spl = line.split("\t");
-                if re.match("-", line_spl[0]):
+                if "-" in line_spl[0]:
                     sentence.lines_.append(line_spl)
                     continue
-
                 sentence.lines_.append(line_spl)
                 word = Conllu(line_spl)
                 sentence.sent_.append(word)
@@ -308,6 +309,9 @@ if __name__ == "__main__":
 
     for sentence in sentences:
         print(sentence.header_.strip())
-        for word in sentence.sent_:
-            word.print_all()
+        sentence.apply_convert_tree()
+        for word in sentence.lines_:
+            print("\t".join(word).strip())
+        # for word in sentence.sent_:
+        #     word.print_all()
         print()
