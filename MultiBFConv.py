@@ -308,10 +308,14 @@ if __name__ == "__main__":
                 pass
 
     for sentence in sentences:
+        ### with extra lines
         print(sentence.header_.strip())
         sentence.apply_convert_tree()
+        ### with multi-word unit
         for word in sentence.lines_:
             print("\t".join(word).strip())
+
+        ### without multi-word unit
         # for word in sentence.sent_:
         #     word.print_all()
         print()
