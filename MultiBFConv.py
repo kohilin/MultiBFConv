@@ -6,20 +6,21 @@ import sys
 
 
 class Conllu:
-    def __init__(self, id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc):
-        self.mId = id
-        self.mForm = form
-        self.mLemma = lemma
-        self.mUpostag = upostag
-        self.mXpostag = xpostag
-        self.mFeats = feats
-        self.mHead = head
-        self.mDeprel = deprel
-        self.mDeps = deps
-        self.mMisc = misc
-        self.mParent = head
+    def __init__(self, line):
+        self.mId = line[0]
+        self.mForm = line[1]
+        self.mLemma = line[2]
+        self.mUpostag = line[3]
+        self.mXpostag = line[4]
+        self.mFeats = line[5]
+        self.mHead = line[6]
+        self.mDeprel = line[7]
+        self.mDeps = line[8]
+        self.mMisc = line[9]
+        self.mParent = []
         self.mLeftChild = []
         self.mRightChild = []
+
 
 
 
@@ -45,21 +46,6 @@ class Sentence:
                     self.sent_[head].mLeftChild.append(i)
                 else:
                     self.sent_[head].mRightChild.append(i)
-        # return sentence
-
-
-# def create_tree(sentence):
-#     for i, c in enumerate(sentence.sent_):
-#         assert isinstance(c, Conllu)
-#         head = int(c.mHead) - 1
-#
-#         if head != -1:
-#             if i < int(sentence.sent_[head].mId):
-#                 sentence.sent_[head].mLeftChild.append(i)
-#             else:
-#                 sentence.sent_[head].mRightChild.append(i)
-#     # return sentence
-
 
 def check_proj(sentence):
     for i, c in enumerate(sentence):
@@ -104,13 +90,14 @@ def conllu_reader(conllufile):
                     sentence.header_ += line
 
             else:
-                [id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc] = line.split('\t')
-                if re.match("-", id):
-                    sentence.lines_.append([id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc])
+                # [id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc] = line.split('\t')
+                line_spl = line.split("\t");
+                if re.match("-", line_spl[0]):
+                    sentence.lines_.append(line_spl)
                     continue
 
-                sentence.lines_.append([id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc])
-                word = Conllu(id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc)
+                sentence.lines_.append(line_spl)
+                word = Conllu(line_spl)
                 sentence.sent_.append(word)
 
     return sentences
