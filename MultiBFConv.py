@@ -28,20 +28,37 @@ class Conllu:
 
 class Sentence:
     def __init__(self):
-        self.sentence = []
-        self.proj = 1
+        self.header_ = ""
+        self.sent_ = []
+        self.proj_ = 1
+        self.sent_id_ = ""
+        self.text_ = ""
+        self.lines_ = []
 
-def create_tree(sentence):
-    for i, c in enumerate(sentence):
-        assert isinstance(c, Conllu)
-        head = int(c.mHead) - 1
+    def create_tree(self):
+        for i, c in enumerate(self.sent_):
+            assert isinstance(c, Conllu)
+            head = int(c.mHead) - 1
 
-        if head != -1:
-            if i < int(sentence[head].mId):
-                sentence[head].mLeftChild.append(i)
-            else:
-                sentence[head].mRightChild.append(i)
-    return sentence
+            if head != -1:
+                if i < int(self.sent_[head].mId):
+                    self.sent_[head].mLeftChild.append(i)
+                else:
+                    self.sent_[head].mRightChild.append(i)
+        # return sentence
+
+
+# def create_tree(sentence):
+#     for i, c in enumerate(sentence.sent_):
+#         assert isinstance(c, Conllu)
+#         head = int(c.mHead) - 1
+#
+#         if head != -1:
+#             if i < int(sentence.sent_[head].mId):
+#                 sentence.sent_[head].mLeftChild.append(i)
+#             else:
+#                 sentence.sent_[head].mRightChild.append(i)
+#     # return sentence
 
 
 def check_proj(sentence):
@@ -72,12 +89,29 @@ def conllu_reader(conllufile):
     with open(conllufile) as f:
         for line in f:
             if re.match("\n", line):
-                sentences.append(create_tree(sentence.sentence))
+                sentence.create_tree()
+                sentences.append(sentence)
                 sentence = Sentence()
+
+            elif line[0] == "#":
+                if line[2] == "s" and line[8] == "d":
+                    sentence.header_ += line
+                    sentence.sent_id_ = line[12:]
+                elif line[2] == "t" and line[5] == "t":
+                    sentence.header_ += line
+                    sentence.text_ = line[9:]
+                else:
+                    sentence.header_ += line
+
             else:
                 [id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc] = line.split('\t')
+                if re.match("-", id):
+                    sentence.lines_.append([id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc])
+                    continue
+
+                sentence.lines_.append([id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc])
                 word = Conllu(id, form, lemma, upostag, xpostag, feats, head, deprel, deps, misc)
-                sentence.sentence.append(word)
+                sentence.sent_.append(word)
 
     return sentences
 
@@ -273,12 +307,12 @@ if __name__ == "__main__":
     sentences = conllu_reader(sys.argv[1])
     converter = MultiBFConv()
     for i,sentence in enumerate(sentences):
-        for word in sentence:
+        for word in sentence.sent_:
             if word.mDeprel == "root":
                 if sys.argv[2] == "forward":
-                    converter.convert_forward(int(word.mId) - 1, sentence)
+                    converter.convert_forward(int(word.mId) - 1, sentence.sent_)
                 elif sys.argv[2] == "backward":
-                    converter.convert_backward(int(word.mId) - 1, sentence)
+                    converter.convert_backward(int(word.mId) - 1, sentence.sent_)
                 else:
                     raise Exception("you have to choose \"forward\" or \"backward\" for second argument")
 
@@ -286,6 +320,7 @@ if __name__ == "__main__":
                 pass
 
     for sentence in sentences:
-        for word in sentence:
+        print(sentence.header_.strip())
+        for word in sentence.sent_:
             word.print_all()
         print()
