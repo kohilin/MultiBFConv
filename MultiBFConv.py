@@ -83,10 +83,10 @@ def conllu_reader(conllufile):
                 sentence = Sentence()
 
             elif line[0] == "#":
-                if line[2] == "s" and line[8] == "d":
+                if line[2:9] == "sent_id":
                     sentence.header_ += line
                     sentence.sent_id_ = line[12:]
-                elif line[2] == "t" and line[5] == "t":
+                elif line[2:6] == "text":
                     sentence.header_ += line
                     sentence.text_ = line[9:]
                 else:
