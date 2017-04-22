@@ -317,4 +317,7 @@ if __name__ == "__main__":
                 f.write("\t".join(word))
 
             ### without multi-word unit
+            # for word in sentence.sent_:
+            #     f.write("\t".join(word))
+
             f.write("\n")
