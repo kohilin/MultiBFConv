@@ -97,6 +97,10 @@ def conllu_reader(conllufile):
                 if "-" in line_spl[0]:
                     sentence.lines_.append(line_spl)
                     continue
+
+                if "." in line_spl[0]:
+                    continue
+
                 sentence.lines_.append(line_spl)
                 word = Conllu(line_spl)
                 sentence.sent_.append(word)
