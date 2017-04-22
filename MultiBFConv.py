@@ -307,15 +307,14 @@ if __name__ == "__main__":
             else:
                 pass
 
-    for sentence in sentences:
-        ### with extra lines
-        print(sentence.header_.strip())
-        sentence.apply_convert_tree()
-        ### with multi-word unit
-        for word in sentence.lines_:
-            print("\t".join(word).strip())
+    with open(sys.argv[3], "w")  as f:
+        for sentence in sentences:
+            ### with extra lines
+            f.write(sentence.header_)
+            sentence.apply_convert_tree()
+            ### with multi-word unit
+            for word in sentence.lines_:
+                f.write("\t".join(word))
 
-        ### without multi-word unit
-        # for word in sentence.sent_:
-        #     word.print_all()
-        print()
+            ### without multi-word unit
+            f.write("\n")
