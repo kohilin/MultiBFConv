@@ -12,8 +12,10 @@
 # HOW TO USE
 python MultiBFConv.py input.conllu [forward|backward] output.conllu
 
-- python3 MultiBFConv.py en-ud-dev.conllu forward en-ud-dev.conllu.conv
-- python3 MultiBFConv.py en-ud-dev.conllu.conv backward en-ud-dev.conllu.reconv
+```
+python3 MultiBFConv.py en-ud-dev.conllu forward en-ud-dev.conllu.conv
+python3 MultiBFConv.py en-ud-dev.conllu.conv backward en-ud-dev.conllu.reconv
+```
 
 # NOTE
 - Please remove UD's extra lines like sentence id beforehand
